@@ -1,0 +1,29 @@
+{
+  "generated_at": "2026-07-21T16:00:00+08:00",
+  "meetings": [
+    {
+      "meeting_code": "000000001",
+      "subject": "Synthetic attendance test",
+      "start_time": "2026-07-21T14:00:00+08:00",
+      "end_time": "2026-07-21T15:00:00+08:00",
+      "pagination_complete": true,
+      "invitees": [
+        {"person_id": "test-user-1", "name": "Test User One"},
+        {"person_id": "test-user-2", "name": "Test User Two"}
+      ],
+      "participants": [
+        {
+          "person_id": "test-user-1",
+          "name": "Test User One",
+          "participant_type": "user",
+          "sessions": [
+            {
+              "join_time": "2026-07-21T14:02:00+08:00",
+              "leave_time": "2026-07-21T15:00:00+08:00"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
