@@ -1,4 +1,4 @@
-# itriton-skills
+# ITRITON-SKILLS
 
 面向智能 Agent 的实用技能集合。当前仓库提供 `tmeet-assistant`，用于通过腾讯会议 CLI 管理会议、查询录制与报告，并完成可审计的会议考勤统计。
 
