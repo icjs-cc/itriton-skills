@@ -84,8 +84,30 @@ itriton-skills/
 python3 -m unittest discover -s tmeet-assistant/tests -v
 ```
 
+## 同步到 GitHub 与 Gitee
+
+可以为 `origin` 配置多个推送地址，使一次推送同时更新 GitHub 和 Gitee。以下配置保留 GitHub 作为 `origin` 的拉取地址，并重建其推送地址列表：
+
+```bash
+git config --unset-all remote.origin.pushurl 2>/dev/null || true
+git config --add remote.origin.pushurl https://github.com/icjs-cc/itriton-skills.git
+git config --add remote.origin.pushurl https://gitee.com/itriton/itriton-skills.git
+```
+
+之后使用一条命令同步两个仓库：
+
+```bash
+git push origin main
+```
+
+多个远程地址的推送不是原子操作。如果其中一个远程失败，另一个可能已经更新；修复失败原因后重新推送，并分别核对两个仓库的目标分支。
+
 ## 安全提示
 
 - 不要在终端、日志或对话中输出 Access Token 和 Refresh Token。
 - 取消或修改会议、移除成员、踢出成员等操作必须先获得明确确认。
 - 考勤结论来自本地规则计算，不是腾讯会议返回的原始结论；数据不完整时不得生成确定性判定。
+
+## 开源许可
+
+本项目采用 [MIT License](LICENSE)，版权归 iTriton Contributors 所有。
