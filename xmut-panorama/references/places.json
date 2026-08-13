@@ -1,0 +1,190 @@
+{
+  "source": {
+    "portal": "https://3d.xmut.edu.cn/",
+    "tour_2022": "https://3d.xmut.edu.cn/2022/",
+    "tour_2016": "https://3d.xmut.edu.cn/2016/",
+    "engine": "krpano / Panotour Pro",
+    "deeplink": {
+      "pattern": "https://3d.xmut.edu.cn/2022/?startscene={scene_id}",
+      "aliases": ["s={scene_id}"],
+      "optional_view": ["h", "v", "f"],
+      "default_scene": "pano926",
+      "notes": "passQueryParameters=true；startup 中 s 会回填到 startscene"
+    },
+    "extracted_from": [
+      "https://3d.xmut.edu.cn/2022/indexdata/index.xml",
+      "https://3d.xmut.edu.cn/2022/indexdata/index_messages_zh.xml"
+    ],
+    "updated": "2026-08-13"
+  },
+  "places": [
+    {
+      "id": "aerial",
+      "name": "空中全景",
+      "aliases": ["鸟瞰", "航拍", "校园全貌", "地图总览", "随便逛逛"],
+      "type": "overview",
+      "area": "全校",
+      "description": "校园空中总览起点，可看到主要建筑热点并跳转到地面场景。",
+      "scene_id": "pano926",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano926",
+      "geo": { "lat": 24.626255555556, "lng": 118.08220555555999 },
+      "nearby": ["西南大门", "三鉴湖", "综合楼广场", "图书馆", "明理教学楼", "食堂", "思明苑公寓", "游泳馆外"]
+    },
+    {
+      "id": "southwest-gate",
+      "name": "西南大门",
+      "aliases": ["校门", "大门", "西南门", "正门", "入口"],
+      "type": "entrance",
+      "area": "出入口",
+      "description": "校园西南侧主要出入口，适合作为参观起点。",
+      "scene_id": "pano915",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano915",
+      "nearby": ["三鉴湖"]
+    },
+    {
+      "id": "sanjian-lake",
+      "name": "三鉴湖",
+      "aliases": ["鉴湖", "湖边", "校园湖", "拍照", "景观", "散步"],
+      "type": "landmark",
+      "area": "校园景观",
+      "description": "校园标志性湖景，适合散步、拍照与放松。",
+      "scene_id": "pano916",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano916",
+      "nearby": ["西南大门", "综合楼广场"]
+    },
+    {
+      "id": "complex-square",
+      "name": "综合楼广场",
+      "aliases": ["综合楼外", "广场", "行政楼附近"],
+      "type": "plaza",
+      "area": "教学/行政",
+      "description": "综合楼外侧广场，连接综合楼室内与周边教学区域。",
+      "scene_id": "pano917",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano917",
+      "nearby": ["综合楼大堂", "三鉴湖"]
+    },
+    {
+      "id": "complex-lobby",
+      "name": "综合楼大堂",
+      "aliases": ["综合楼", "综合楼大厅", "办事", "行政"],
+      "type": "building",
+      "area": "教学/行政",
+      "description": "综合楼室内大堂场景，可进一步通往外图书店、土建学院等点位。",
+      "scene_id": "pano918",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano918",
+      "nearby": ["综合楼广场", "外图书店", "土建学院"]
+    },
+    {
+      "id": "foreign-bookstore",
+      "name": "外图书店",
+      "aliases": ["书店", "买书", "教材"],
+      "type": "facility",
+      "area": "综合楼周边",
+      "description": "外图书店全景点位。",
+      "scene_id": "pano919",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano919",
+      "nearby": ["综合楼大堂", "土建学院"]
+    },
+    {
+      "id": "civil-engineering",
+      "name": "土建学院",
+      "aliases": ["土建", "土木工程", "建筑相关学院"],
+      "type": "academic",
+      "area": "教学区",
+      "description": "土建学院相关全景点位。",
+      "scene_id": "pano920",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano920",
+      "nearby": ["综合楼大堂", "外图书店", "游泳馆外"]
+    },
+    {
+      "id": "swimming",
+      "name": "游泳馆外",
+      "aliases": ["游泳馆", "游泳", "运动", "体育馆附近", "打球", "篮球", "体育设施"],
+      "type": "sports",
+      "area": "体育设施",
+      "description": "游泳馆外侧全景。当前公开 2022 漫游未单独提供篮球场/室内馆专项场景，运动类需求可先落到此处或空中全景定位体育区域。",
+      "scene_id": "pano921",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano921",
+      "nearby": ["思明苑公寓", "土建学院"],
+      "coverage_note": "nearest_sports_scene"
+    },
+    {
+      "id": "simingyuan",
+      "name": "思明苑公寓",
+      "aliases": ["思明苑", "宿舍", "公寓", "住宿", "寝室"],
+      "type": "dormitory",
+      "area": "宿舍区",
+      "description": "思明苑学生公寓全景点位，可用于熟悉宿舍生活区氛围与周边路径。",
+      "scene_id": "pano922",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano922",
+      "nearby": ["游泳馆外", "明理教学楼"]
+    },
+    {
+      "id": "mingli",
+      "name": "明理教学楼",
+      "aliases": ["明理", "教学楼", "上课", "教室", "教学区"],
+      "type": "academic",
+      "area": "教学区",
+      "description": "明理教学楼全景，适合了解日常上课区域。",
+      "scene_id": "pano923",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano923",
+      "nearby": ["图书馆", "思明苑公寓"]
+    },
+    {
+      "id": "library",
+      "name": "图书馆",
+      "aliases": ["图书管", "看书", "自习", "学习", "借书", "安静学习"],
+      "type": "library",
+      "area": "学习资源",
+      "description": "学校主要学习资源场所，适合看书、自习与查阅资料。",
+      "scene_id": "pano1083",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano1083",
+      "nearby": ["明理教学楼", "食堂"]
+    },
+    {
+      "id": "canteen-a",
+      "name": "食堂（场景A）",
+      "aliases": ["食堂", "吃饭", "餐厅", "用餐", "午饭", "晚饭"],
+      "type": "canteen",
+      "area": "生活服务",
+      "description": "食堂全景场景之一（官方标题均为「食堂」）。可与另一食堂场景对照浏览。",
+      "scene_id": "pano924",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano924",
+      "nearby": ["食堂（场景B）", "图书馆"],
+      "official_title": "食堂"
+    },
+    {
+      "id": "canteen-b",
+      "name": "食堂（场景B）",
+      "aliases": ["食堂", "吃饭", "餐厅", "用餐"],
+      "type": "canteen",
+      "area": "生活服务",
+      "description": "食堂全景场景之二（官方标题均为「食堂」）。",
+      "scene_id": "pano925",
+      "3d_url": "https://3d.xmut.edu.cn/2022/?startscene=pano925",
+      "nearby": ["食堂（场景A）", "西南大门"],
+      "official_title": "食堂"
+    }
+  ],
+  "intent_map": {
+    "看书/自习/学习资源": ["图书馆"],
+    "上课/教室/教学楼": ["明理教学楼", "土建学院", "综合楼广场"],
+    "吃饭/食堂": ["食堂（场景A）", "食堂（场景B）"],
+    "宿舍/住宿": ["思明苑公寓"],
+    "运动/打球/游泳": ["游泳馆外", "空中全景"],
+    "拍照/散步/景观": ["三鉴湖", "空中全景"],
+    "校门/怎么进学校": ["西南大门"],
+    "办事/综合楼": ["综合楼大堂", "综合楼广场"],
+    "买书": ["外图书店"],
+    "总览/随便逛逛": ["空中全景"]
+  },
+  "tour_presets": {
+    "freshman_half_day": [
+      { "stop": 1, "place_id": "mingli", "purpose": "了解日常上课位置" },
+      { "stop": 2, "place_id": "library", "purpose": "了解学习资源" },
+      { "stop": 3, "place_id": "canteen-a", "purpose": "解决吃饭问题" },
+      { "stop": 4, "place_id": "simingyuan", "purpose": "熟悉生活区域" },
+      { "stop": 5, "place_id": "sanjian-lake", "purpose": "认识厦理工特色景观", "alt_start": "aerial" }
+    ]
+  }
+}

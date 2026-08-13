@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>厦理全景地图 · 内嵌查看器</title>
+  <style>
+    :root {
+      --bg: #0f1419;
+      --panel: #171d25;
+      --line: #2a3441;
+      --text: #e8eef4;
+      --muted: #8b9aab;
+      --accent: #3d8bfd;
+      --accent-soft: rgba(61, 139, 253, 0.16);
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      margin: 0;
+      height: 100%;
+      overflow: hidden;
+      background: var(--bg);
+      color: var(--text);
+      font-family: "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+    }
+    .app {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      height: 100%;
+      min-height: 0;
+    }
+    aside {
+      background: var(--panel);
+      border-right: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    .brand {
+      flex-shrink: 0;
+      padding: 14px 14px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand-logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 64px;
+      padding: 8px 10px;
+    }
+    .brand-logo {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 56px;
+      object-fit: contain;
+    }
+    .brand p {
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-align: center;
+      line-height: 1.2;
+    }
+    .toolbar {
+      flex-shrink: 0;
+      display: flex;
+      gap: 8px;
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--line);
+    }
+    .toolbar button {
+      flex: 1;
+      border: 1px solid var(--line);
+      background: transparent;
+      color: var(--text);
+      border-radius: 8px;
+      padding: 8px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .toolbar button:hover { border-color: var(--accent); color: #fff; }
+    .list {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 8px;
+      -webkit-overflow-scrolling: touch;
+    }
+    .place {
+      width: 100%;
+      text-align: left;
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 10px 10px;
+      cursor: pointer;
+      margin-bottom: 4px;
+    }
+    .place:hover { background: rgba(255,255,255,0.03); }
+    .place.active {
+      background: var(--accent-soft);
+      border-color: rgba(61, 139, 253, 0.45);
+    }
+    .place .name { font-size: 14px; font-weight: 600; }
+    .place .meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 11px;
+    }
+    main {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    #frame {
+      border: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: #000;
+    }
+    .status {
+      position: absolute;
+      left: 12px;
+      bottom: 12px;
+      z-index: 2;
+      background: rgba(15, 20, 25, 0.82);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      color: var(--muted);
+      max-width: calc(100% - 24px);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      pointer-events: none;
+    }
+    .tour {
+      flex-shrink: 0;
+      border-top: 1px solid var(--line);
+      padding: 10px 12px 14px;
+    }
+    .tour h2 {
+      margin: 0 0 8px;
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .tour-actions {
+      display: flex;
+      gap: 8px;
+    }
+    .tour-actions button {
+      flex: 1;
+      border: 0;
+      border-radius: 8px;
+      padding: 9px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      background: var(--accent);
+      color: #fff;
+      font-weight: 600;
+    }
+    .tour-actions button.secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--line);
+      font-weight: 500;
+    }
+    @media (max-width: 840px) {
+      .app {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(220px, 38%) 1fr;
+      }
+      aside {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        height: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <div class="brand">
+        <div class="brand-logo-wrap">
+          <img class="brand-logo" src="/assets/xmut-logo.png?v=2" alt="厦门理工学院" />
+        </div>
+        <p>3D 校园漫游</p>
+      </div>
+      <div class="toolbar">
+        <button type="button" id="btnAerial">空中总览</button>
+        <button type="button" id="btnReload">刷新场景</button>
+      </div>
+      <div class="list" id="list"></div>
+      <div class="tour">
+        <h2>新生半日路线</h2>
+        <div class="tour-actions">
+          <button type="button" id="btnTour">开始 / 下一站</button>
+          <button type="button" class="secondary" id="btnTourReset">重置</button>
+        </div>
+      </div>
+    </aside>
+    <main>
+      <iframe id="frame" title="厦门理工学院3D全景" allowfullscreen referrerpolicy="no-referrer-when-downgrade"></iframe>
+      <div class="status" id="status">准备加载…</div>
+    </main>
+  </div>
+  <script>
+    const frame = document.getElementById("frame");
+    const list = document.getElementById("list");
+    const status = document.getElementById("status");
+    let places = [];
+    let currentScene = "";
+    let lastSeq = -1;
+    let applyingRemote = false;
+    let ignoreRemoteUntil = 0;
+    let tourIndex = -1;
+    let tourStops = [];
+
+    function proxyUrl(sceneId) {
+      const id = encodeURIComponent(sceneId);
+      return `/proxy/2022/index.html?startscene=${id}&s=${id}`;
+    }
+
+    function getKrpano() {
+      try {
+        const win = frame.contentWindow;
+        if (!win) return null;
+        if (typeof win.__xmutForceScene === "function") {
+          return win;
+        }
+        return win.document.getElementById("krpanoSWFObject");
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function callLoadScene(sceneId) {
+      try {
+        const win = frame.contentWindow;
+        if (win && typeof win.__xmutForceScene === "function") {
+          win.__XMUT_STARTSCENE = sceneId;
+          try {
+            win.document.cookie = "xmut_scene=" + sceneId + "; path=/; SameSite=Lax";
+          } catch (_) {}
+          if (win.__xmutForceScene()) return true;
+        }
+        const api = getKrpano();
+        if (!api || typeof api.call !== "function") return false;
+        api.call("mainloadscene(" + sceneId + ")");
+        return true;
+      } catch (_) {
+        try {
+          const api = frame.contentWindow.document.getElementById("krpanoSWFObject");
+          api.call("loadscene(" + sceneId + ", null, MERGE, BLEND(0.35))");
+          return true;
+        } catch (_2) {
+          return false;
+        }
+      }
+    }
+
+    function updateChrome(sceneId, label) {
+      status.textContent = `当前：${label || sceneId} · ${sceneId}`;
+      [...list.querySelectorAll(".place")].forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.scene === sceneId);
+      });
+      const url = new URL(location.href);
+      url.searchParams.set("scene", sceneId);
+      history.replaceState(null, "", url);
+    }
+
+    function loadIframe(sceneId) {
+      return new Promise((resolve) => {
+        const onLoad = () => {
+          frame.removeEventListener("load", onLoad);
+          let n = 0;
+          const timer = setInterval(() => {
+            n += 1;
+            if (callLoadScene(sceneId) || n > 50) {
+              clearInterval(timer);
+              resolve(true);
+            }
+          }, 200);
+        };
+        frame.addEventListener("load", onLoad);
+        frame.src = proxyUrl(sceneId) + `&_=${Date.now()}`;
+      });
+    }
+
+    async function notifyServer(sceneId, tour) {
+      if (applyingRemote) return;
+      try {
+        let url = `/api/goto?scene=${encodeURIComponent(sceneId)}`;
+        if (tour) url += `&tour=${encodeURIComponent(tour)}`;
+        const res = await fetch(url);
+        const state = await res.json();
+        lastSeq = state.seq;
+      } catch (_) {
+        /* ignore */
+      }
+    }
+
+    async function setScene(sceneId, label, { sync = true, force = false } = {}) {
+      if (!sceneId) return;
+      if (!force && sceneId === currentScene) {
+        updateChrome(sceneId, label);
+        return;
+      }
+      currentScene = sceneId;
+      ignoreRemoteUntil = Date.now() + 3000;
+      updateChrome(sceneId, label);
+
+      // Prefer in-place switch inside already-loaded player (same-origin iframe).
+      if (callLoadScene(sceneId)) {
+        status.textContent = `当前：${label || sceneId} · ${sceneId} · 已切换`;
+      } else {
+        status.textContent = `当前：${label || sceneId} · ${sceneId} · 加载中…`;
+        await loadIframe(sceneId);
+        status.textContent = `当前：${label || sceneId} · ${sceneId}`;
+      }
+      if (sync) notifyServer(sceneId);
+    }
+
+    function renderList() {
+      list.innerHTML = "";
+      places.forEach((p) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "place";
+        btn.dataset.scene = p.scene_id;
+        btn.innerHTML = `<div class="name">${p.name}</div><div class="meta">${p.area || ""} · ${p.scene_id}</div>`;
+        btn.addEventListener("click", () => {
+          tourIndex = -1;
+          setScene(p.scene_id, p.name, { force: true });
+        });
+        list.appendChild(btn);
+      });
+    }
+
+    function findPlace(sceneId) {
+      return places.find((p) => p.scene_id === sceneId);
+    }
+
+    function onClick(id, handler) {
+      const el = document.getElementById(id);
+      if (el) el.addEventListener("click", handler);
+    }
+
+    onClick("btnAerial", () => {
+      tourIndex = -1;
+      setScene("pano926", "空中全景", { force: true });
+    });
+    onClick("btnReload", () => {
+      const p = findPlace(currentScene);
+      setScene(currentScene, p ? p.name : currentScene, { force: true });
+    });
+    onClick("btnTourReset", () => {
+      tourIndex = -1;
+      status.textContent = "半日路线已重置，点击「开始 / 下一站」";
+    });
+    onClick("btnTour", () => {
+      if (!tourStops.length) return;
+      tourIndex = (tourIndex + 1) % tourStops.length;
+      const stop = tourStops[tourIndex];
+      const place = places.find((p) => p.id === stop.place_id) || findPlace(stop.scene_id);
+      const sceneId = place ? place.scene_id : stop.scene_id;
+      const name = place ? place.name : sceneId;
+      setScene(sceneId, name, { force: true });
+      status.textContent = `第${tourIndex + 1}站 · ${name} · ${stop.purpose || ""}`;
+    });
+
+    async function pollState() {
+      try {
+        if (Date.now() < ignoreRemoteUntil) return;
+        const state = await fetch("/api/state", { cache: "no-store" }).then((r) => r.json());
+        if (typeof state.seq !== "number") return;
+        if (state.seq === lastSeq) return;
+        lastSeq = state.seq;
+        if (!state.scene_id) return;
+        if (state.scene_id === currentScene) return;
+        applyingRemote = true;
+        const place = findPlace(state.scene_id);
+        setScene(state.scene_id, state.name || (place && place.name) || state.scene_id, {
+          sync: false,
+          force: true,
+        });
+        if (state.tour === "freshman" && tourIndex < 0) {
+          const idx = tourStops.findIndex((s) => {
+            const p = places.find((x) => x.id === s.place_id);
+            return p && p.scene_id === state.scene_id;
+          });
+          if (idx >= 0) tourIndex = idx;
+        }
+      } catch (_) {
+        /* ignore */
+      } finally {
+        applyingRemote = false;
+      }
+    }
+
+    async function boot() {
+      const res = await fetch("/places.json");
+      const data = await res.json();
+      places = data.places || [];
+      tourStops = (data.tour_presets && data.tour_presets.freshman_half_day) || [];
+      renderList();
+
+      let state = null;
+      try {
+        state = await fetch("/api/state", { cache: "no-store" }).then((r) => r.json());
+        lastSeq = state.seq;
+      } catch (_) {}
+
+      const params = new URLSearchParams(location.search);
+      const urlScene = params.get("scene");
+      // URL（用户刚点开/刷新）优先于可能过期的服务端总览状态
+      const scene = urlScene || (state && state.scene_id) || "pano926";
+      const place = findPlace(scene);
+      const label =
+        (place && place.name) ||
+        (state && state.scene_id === scene && state.name) ||
+        scene;
+      setScene(scene, label, { sync: true, force: true });
+
+      if (params.get("tour") === "freshman" || (state && state.tour === "freshman")) {
+        const idx = tourStops.findIndex((s) => {
+          const p = places.find((x) => x.id === s.place_id);
+          return p && p.scene_id === scene;
+        });
+        tourIndex = idx >= 0 ? idx : 0;
+        status.textContent = `半日路线第${tourIndex + 1}站 · ${label}`;
+      }
+
+      setInterval(pollState, 600);
+    }
+
+    boot().catch((err) => {
+      status.textContent = "加载地点目录失败：" + err;
+    });
+  </script>
+</body>
+</html>
